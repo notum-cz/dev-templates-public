@@ -29,6 +29,7 @@ export const env = createEnv({
     NEXT_PUBLIC_STRAPI_URL: z.string().url(),
     NEXT_PUBLIC_PREVENT_UNUSED_FUNCTIONS_ERROR_LOGS: optionalZodBoolean,
     NEXT_PUBLIC_NODE_ENV: z.string().optional(),
+    NEXT_PUBLIC_REVALIDATE: z.number().or(z.literal(false)).optional(),
   },
   /*
    * Due to how Next.js bundles environment variables on Edge and Client,
@@ -46,5 +47,9 @@ export const env = createEnv({
     NEXT_PUBLIC_STRAPI_URL: process.env.NEXT_PUBLIC_STRAPI_URL,
     NEXT_PUBLIC_PREVENT_UNUSED_FUNCTIONS_ERROR_LOGS:
       process.env.NEXT_PUBLIC_PREVENT_UNUSED_FUNCTIONS_ERROR_LOGS,
+    NEXT_PUBLIC_REVALIDATE:
+      isNaN(Number(process.env.NEXT_PUBLIC_REVALIDATE)) === false
+        ? Number(process.env.NEXT_PUBLIC_REVALIDATE)
+        : false,
   },
 })

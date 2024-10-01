@@ -1,13 +1,34 @@
 import { notFound } from "next/navigation"
 import { Attribute } from "@repo/strapi"
+import { unstable_setRequestLocale } from "next-intl/server"
 
 import { PageProps } from "@/types/next"
 
+import { locales } from "@/lib/i18n"
 import { getMetadataFromStrapi } from "@/lib/next-helpers"
 import Strapi from "@/lib/strapi"
 import { ComponentsRenderer } from "@/components/page-builder/ComponentsRenderer"
 import { PageBuilderFooter } from "@/components/page-builder/single-types/Footer"
 import { PageBuilderNavbar } from "@/components/page-builder/single-types/Navbar"
+
+export async function generateStaticParams() {
+  const promises = locales.map((locale) =>
+    Strapi.fetchAll("api::page.page", { locale })
+  )
+
+  const results = await Promise.allSettled(promises)
+
+  const params = results
+    .filter((result) => result.status === "fulfilled")
+    .map((result) => result.value.data)
+    .flat()
+    .map((page) => ({
+      locale: page.attributes.locale,
+      rest: [page.attributes.slug],
+    }))
+
+  return params
+}
 
 async function fetchData(pageUrl: string, locale: string) {
   try {
@@ -32,6 +53,8 @@ export async function generateMetadata({ params }: Props) {
 }
 
 export default async function StrapiPage({ params }: Props) {
+  unstable_setRequestLocale(params.locale)
+
   const pageUrl = params.rest.filter((part) => part != "builder").join("/")
   const response = await fetchData(pageUrl, params.locale)
 

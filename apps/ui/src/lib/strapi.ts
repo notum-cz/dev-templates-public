@@ -43,7 +43,7 @@ export default class Strapi {
       options?.strapiJWT
     )
     const response = await fetch(url, {
-      cache: "no-cache", // `next: { revalidate: 60 }`
+      next: { revalidate: env.NEXT_PUBLIC_REVALIDATE }, // cache: "no-cache" // set for dynamic apps
       ...requestInit,
       headers: { ...requestInit?.headers, ...headers },
     })
