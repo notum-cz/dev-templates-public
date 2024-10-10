@@ -1,12 +1,12 @@
 "use client"
 
 import React, { useState } from "react"
-import Link from "next/link"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
 
+import AppLink from "@/components/elementary/AppLink"
 import { AppField } from "@/components/forms/AppField"
 import { AppForm } from "@/components/forms/AppForm"
 import { AppTextArea } from "@/components/forms/AppTextArea"
@@ -15,7 +15,7 @@ import { Button } from "@/components/ui/button"
 export function ContactForm({
   gdpr,
 }: Readonly<{
-  gdpr?: { href?: string; label?: string }
+  gdpr?: { href?: string; label?: string; newTab?: boolean }
 }>) {
   const t = useTranslations("contactForm")
 
@@ -70,9 +70,13 @@ export function ContactForm({
         {gdpr?.href && (
           <div className="mt-5 flex flex-col items-center sm:flex-row">
             <p>{t("gdpr")}</p>
-            <Link className="p-0 pl-1 font-medium" href={gdpr?.href}>
+            <AppLink
+              openExternalInNewTab={gdpr.newTab}
+              className="p-0 pl-1 font-medium"
+              href={gdpr?.href}
+            >
               {gdpr.label || t("gdprLink")}
-            </Link>
+            </AppLink>
           </div>
         )}
 

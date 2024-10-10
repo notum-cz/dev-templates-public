@@ -1,6 +1,6 @@
-import Link from "next/link"
 import { Attribute } from "@repo/strapi"
 
+import AppLink from "@/components/elementary/AppLink"
 import { Container } from "@/components/elementary/Container"
 import { NewsletterForm } from "@/components/elementary/forms/NewsletterForm"
 
@@ -23,12 +23,13 @@ export function Newsletter({
             <NewsletterForm />
             <div className="mt-2 flex items-center">
               {component.gdpr && component.gdpr.href && (
-                <Link
+                <AppLink
+                  openExternalInNewTab={component.gdpr.newTab}
                   className="text-blue-700 underline"
                   href={component.gdpr.href}
                 >
                   {component.gdpr.label}
-                </Link>
+                </AppLink>
               )}
             </div>
           </div>
